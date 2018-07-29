@@ -47,6 +47,11 @@ end
 local Reduce = 0
 local Resist = 0
 function SWEP:PostDrawViewModel()
+    /*if !self.VElements then
+        self.AttachmentCheck()
+    end*/
+    
+    
 	if self.LastClip<self:Clip1() then
 	end
 
@@ -246,6 +251,11 @@ function SWEP:PostDrawViewModel()
 		Reloading = false	
 	end
 	
+    if !self.VElements then
+        self.VElements = {}
+        self:AttachmentCheck()
+    end
+    
 	--Don't Ironsight until you're done deploying OR have an rds sight while bolt actioning.
 	if self.AlwaysAnim and self.VElements.rds then
 		if self:GetNextPrimaryFire() > CurTime() and self.AlwaysAnim and self.VElements.rds then
