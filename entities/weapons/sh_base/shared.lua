@@ -426,16 +426,24 @@ function SWEP:ShootBullet( damage, num_bullets, aimcone )
 	
 	local HipMul = self.Owner:KeyDown(IN_ATTACK2) and 0 or self.Primary.Ammo == "buckshot" and 0 or 1
 	HipCone = math.Clamp(HipCone-0.002+((CurTime()-LastFired)*0.03),0.01,0.05)*HipMul
+    
+    bullet.Num 		= self.Primary.NumShots
+    bullet.Spread 	= Vector( Cone+HipCone, Cone+HipCone, 0 )	-- Aim Cone
+    bullet.Damage	= self.Primary.Damage
+    
+    if !self.VElements then
+        self.VElements = {}
+        self:AttachmentCheck()
+    end
+    
+    if self.VElements then
+        if self.VElements.slugs then
+            bullet.Num = 1
+            bullet.Spread 	= Vector( Cone+HipCone, Cone+HipCone, 0 )*0.1
+            bullet.Damage	= self.Primary.Damage*10
+        end
+    end
 	
-	if self.VElements.slugs then
-		bullet.Num = 1
-		bullet.Spread 	= Vector( Cone+HipCone, Cone+HipCone, 0 )*0.1
-		bullet.Damage	= self.Primary.Damage*10
-	else
-		bullet.Num 		= self.Primary.NumShots
-		bullet.Spread 	= Vector( Cone+HipCone, Cone+HipCone, 0 )	-- Aim Cone
-		bullet.Damage	= self.Primary.Damage
-	end
 	bullet.Src 		= self.Owner:GetShootPos()+Vector(0,0,headfix) -- Source
 	bullet.Dir 		= self.Owner:GetAimVector() -- Dir of bullet
 	bullet.Tracer	= 0 -- Show a tracer on every x bullets
