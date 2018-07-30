@@ -1,0 +1,22 @@
+// Keys:
+//   {HOSTNAME}
+//   {TIMELIMIT}
+//   {TIMELEFT}
+//   {FRAGLIMIT}
+//   {SERVERTIME}
+//   {CURRENTMAP}
+//   {NEXTMAP}
+//
+// Colors:
+//   1  = White
+//   2  = Grey
+//   3  = Red
+//   4  = Green
+//   5  = Blue
+//   6  = Yellow
+//   7  = Orange
+//   8  = Teal
+//   9  = Aqua
+//   10 = Violet
+//
+4;If you have suggestions to improve gameplay or need to report a bug, visit forums.roaringcow.com.

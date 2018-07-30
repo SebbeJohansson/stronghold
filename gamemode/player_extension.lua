@@ -67,6 +67,31 @@ function meta:GetPlayerColor()
 	return Vector( col.r / 255 * PLAYER_COLOR_MULTIPLIER, col.g / 255 * PLAYER_COLOR_MULTIPLIER, col.b / 255 * PLAYER_COLOR_MULTIPLIER )
 end
 
+function meta:GetGroupName()
+	local ranks = {
+		user="Player",
+		admin="Admin",
+		superadmin="Super Admin",
+		moderator="Moderator",
+		developer="Developer",
+		maindeveloper="Main Developer",
+        support="Support",
+		headadmin="Head Admin",
+	}
+	for k,v in pairs(ranks) do
+		if self:IsUserGroup(k) then
+			return v
+		end
+	end
+	return "Unknown"
+end
+
+function SetColorAlpha(col,a)
+	local cola = table.Copy(col)
+    cola.a = a
+    return cola
+end
+
 -- To add clientside smoothing
 if CLIENT then
 	function meta:SetViewOffset( pos )

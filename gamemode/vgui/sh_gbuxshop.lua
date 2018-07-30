@@ -221,7 +221,9 @@ function PANEL:Init()
 			self.CurrentItem.line = line
 			self.CurrentItem.item = item
 			self.CurrentItem.type = type
-			self.ItemModel:Setup( tbl.model, tbl.name, tbl.fov+3 or 90, tbl.offset or Vector(-10,0,-5),(tbl.ang or Angle(0,0,0)) )
+			local fov = tbl.fov or 90
+
+			self.ItemModel:Setup( tbl.model, tbl.name, fov+3 or 90, tbl.offset or Vector(-10,0,-5),(tbl.ang or Angle(0,0,0)) )
 		end
 	end
 	
