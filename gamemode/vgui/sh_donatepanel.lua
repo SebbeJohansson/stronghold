@@ -11,7 +11,14 @@ local PANEL = {}
 
 function PANEL:Init()
 	self.Donate = vgui.Create( "HTML", self )
-	self.Donate:OpenURL( "http://www.roaringcow.com/Donate.php" )
+	if CLIENT then
+		timer.Simple(10, function()
+			self.Donate:OpenURL( "http://surgegaming.net/pages/donate/index.php?steamid="..LocalPlayer():SteamID() )
+		end)
+	else
+		self.Donate:OpenURL( "http://surgegaming.net/pages/donate/index.php" )
+	end
+	
 end
 
 function PANEL:PerformLayout( w, h )
