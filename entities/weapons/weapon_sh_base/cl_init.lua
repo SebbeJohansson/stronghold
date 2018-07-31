@@ -434,4 +434,3 @@ function SWEP:DrawHUD()
 		end
 		self:Crosshair()
 end
-

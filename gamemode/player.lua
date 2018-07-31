@@ -133,7 +133,7 @@ function GM:PlayerInitialSpawn( ply )
 			if !IsValid( ply ) then return end
 			SendTeamsToClient( ply )
 			
-			GAMEMODE.Net:SendAdvert( ply, "hint", GAMEMODE.Adverts.LastSentHint.color, GAMEMODE.Adverts.LastSentHint.text )
+			GAMEMODE.Net:SendAdvert( ply, "hint", GAMEMODE.Adverts.LastSentHudAdvert.color, GAMEMODE.Adverts.LastSentHudAdvert.text )
 
 			local timelimit = GAMEMODE.ConVars.TimeLimit:GetFloat()
 			if timelimit > 0 then GAMEMODE:StartCountDown( (timelimit*60)-(CurTime()-GAMEMODE.LastGameReset), "Timelimit is up in", "", "", ply ) end
