@@ -48,6 +48,10 @@ function GM:OptionsInit()
 	--minimalhudmode:AddChoice( "Health + Ammo" )
 	minimalhudmode:SetConVar( "sh_hudminimal" )
 	
+    self.OptionsFrame:AddOption( "HUD (Heads Up Display)", "CheckBox", "Enable Team Dot", "sh_teamdot" )
+    self.OptionsFrame:AddOption( "HUD (Heads Up Display)", "CheckBox", "Enable Team Outline", "sh_teamoutline" )
+    self.OptionsFrame:AddOption( "HUD (Heads Up Display)", "CheckBox", "Enable Team Outline ESP", "sh_teamoutline_esp" )
+    
 	local slider, _ = self.OptionsFrame:AddOption( "HUD (Heads Up Display)", "NumSlider", "GBux x-axis offset", "sh_gbuxoffset", 0, ScrW()-150, 0 ) slider:SetTall( 24 ) slider.TextArea:SetDrawBackground( true )
 	self.OptionsFrame:AddOption( "HUD (Heads Up Display)", "CheckBox", "Enable Compass", "sh_compass" )
 	local slider, _ = self.OptionsFrame:AddOption( "HUD (Heads Up Display)", "NumSlider", "Compass Position X", "sh_composx", 0.1, 0.9, 3 ) slider:SetTall( 24 ) slider.TextArea:SetDrawBackground( true )

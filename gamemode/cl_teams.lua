@@ -130,32 +130,56 @@ end
 hook.Add("HUDPaint", "DrawNameTitle", DrawNameTitle)
 
 function TeamMateHUDPaint()
-	local teamIndex = LocalPlayer():Team()
-	local tc = team.GetColor( teamIndex )
+    if GetConVar("sh_teamdot"):GetInt() == 1 then
+        local teamindex = LocalPlayer():Team()
+        local players = player.GetAll()
+        local teammates = team.GetPlayers(teamindex)
+        local teamcolor = team.GetColor(teamindex)
 
-	for _, v in ipairs(player.GetAll()) do
-		if teamIndex != 50 and v:Team() == teamIndex then
-			local pos = v:LocalToWorld( v:OBBCenter() )
-			local sPos = pos:ToScreen()
-			local pDist = (LocalPlayer():GetPos()-pos):Length()
-			local fade = math.Clamp( pDist-500, 0, 210 )
-			if v != LocalPlayer() then
-				local vStart = LocalPlayer():EyePos()
-				local vEnd = v:EyePos()
-				local trace = {}
-				trace.start = vStart
-				trace.endpos = vEnd
-				local trace = util.TraceLine( trace )
+        for k, v in ipairs(teammates) do
+            if not IsValid(v) then continue end
+            if v == LocalPlayer() then continue end
+            if not v:Alive() then continue end
+            if teamindex == 50 then continue end
 			
-				if trace.HitWorld then
-					draw.RoundedBox( 4, sPos.x-4, sPos.y-4, 8, 8, Color(20,20,20,210) )
-					draw.RoundedBox( 2, sPos.x-2, sPos.y-2, 4, 4, Color(tc.r,tc.g,tc.b,210) )
-				elseif pDist > 500 then
-					draw.RoundedBox( 4, sPos.x-4, sPos.y-4, 8, 8, Color(20,20,20,fade) )
-					draw.RoundedBox( 2, sPos.x-2, sPos.y-2, 4, 4, Color(tc.r,tc.g,tc.b,math.Clamp(fade-30,0,210 )) )
-				end
-			end
-		end
-	end
+            local pos = v:LocalToWorld( v:OBBCenter() )
+            local sPos = pos:ToScreen()
+            local pDist = (LocalPlayer():GetPos()-savedPos[k]):Length()
+            local fade = math.Clamp( pDist-500, 0, 210 )
+            
+            local vStart = LocalPlayer():EyePos()
+            local vEnd = v:EyePos()
+            local trace = {}
+            trace.start = vStart
+            trace.endpos = vEnd
+            local trace = util.TraceLine( trace )
+        
+            if trace.HitWorld then
+                draw.RoundedBox( 4, sPos.x-4, sPos.y-4, 8, 8, Color(20,20,20,210) )
+                draw.RoundedBox( 2, sPos.x-2, sPos.y-2, 4, 4, Color(teamcolor.r,teamcolor.g,teamcolor.b,210) )
+            elseif pDist > 1000 then
+                draw.RoundedBox( 4, sPos.x-4, sPos.y-4, 8, 8, Color(20,20,20,fade) )
+                draw.RoundedBox( 2, sPos.x-2, sPos.y-2, 4, 4, Color(teamcolor.r,teamcolor.g,teamcolor.b,math.Clamp(fade-30,0,210 )) )
+            end
+        end
+    end
+    
 end
 hook.Add( "HUDPaint", "TeamMateHUDPaint", TeamMateHUDPaint )
+
+local function HaloGraphs()
+    if GetConVar("sh_teamoutline"):GetInt() == 1 then
+        local teamindex = LocalPlayer():Team()
+        local teammates = team.GetPlayers(teamindex)
+        local teamcolor = team.GetColor(teamindex)
+
+        for k,v in pairs(teammates) do
+            if not IsValid(v) then continue end
+            if v == LocalPlayer() then continue end
+            if not v:Alive() then continue end
+            if teamindex == 50 then continue end
+            halo.Add(teammates, Color(teamcolor.r,teamcolor.g,teamcolor.b, 255), 3, 3, 1, 1, GetConVar("sh_teamoutline_esp"):GetBool())
+        end
+    end
+end
+hook.Add("PreDrawHalos", "TeamHalo", HaloGraphs)
