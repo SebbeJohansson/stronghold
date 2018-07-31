@@ -153,6 +153,8 @@ end
 
 
 function SWEP:AttachmentCheck()
+    
+    
 	if !self.VElements then return end
 
 	local primary = GAMEMODE.PrimaryWeapons[self:GetClass()]
@@ -204,6 +206,7 @@ function SWEP:AttachmentCheck()
 		self.VElements.scope and self.VElements.scope.AuxIronSightsAng
 		self:SetIron(sight, pos, ang)
 	end
+    
 end
 
 function SWEP:DrawWeaponSelection( x, y, wide, tall, alpha )

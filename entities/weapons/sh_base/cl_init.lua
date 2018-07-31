@@ -677,7 +677,9 @@ function SWEP:BoltMovement()
 			end
 			
 			if self:Clip1() == 0 and self.SlideLockPos then
-				VM:ManipulateBonePosition(  Slide,  self.SlideLockPos )
+                if Slide then
+                    VM:ManipulateBonePosition(  Slide,  self.SlideLockPos )
+                end
 			end
 			
 			if self.ResetBolt and Slide then
