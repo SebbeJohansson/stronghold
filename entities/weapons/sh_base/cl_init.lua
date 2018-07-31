@@ -251,8 +251,8 @@ function SWEP:PostDrawViewModel()
 		Reloading = false	
 	end
 	
-    if !self.VElements then
-        self.VElements = {}
+    if !self.VElements then 
+        self.VElements = self.backupVElements
         self:AttachmentCheck()
     end
     
@@ -397,7 +397,6 @@ function SWEP:CreateModels( tab )
     for k, v in pairs( tab ) do
         if (v.type == "Model" and v.model and v.model != "" and (!IsValid(v.modelEnt) or v.createdModel != v.model) and
                 string.find(v.model, ".mdl") and file.Exists (v.model,"GAME") ) then
-
             v.modelEnt = ClientsideModel(v.model)
             if (IsValid(v.modelEnt)) then
                 v.modelEnt:SetPos(vm:GetPos())
@@ -1048,4 +1047,5 @@ function SWEP:DrawHUD()
 		surface.DrawTexturedRect(wat.x, wat.y, 50, 50 )
 	end]]
 end
+
 

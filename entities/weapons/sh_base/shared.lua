@@ -76,6 +76,7 @@ SWEP.CanFire = true
 SWEP.Suppressed = false
 SWEP.LastClip = 0
 SWEP.LastWeapon = nil
+SWEP.backupVElements = nil
 
 Recoil = 0
 local Recoil2 = 0
@@ -102,6 +103,7 @@ function SWEP:Initialize()
 	end
 	end]]
 	self.Owner.JetPack = false
+    self.backupVElements = self.VElements
 end
 
 SWEP.HitImpact = function( attacker, tr, dmginfo )
@@ -153,8 +155,6 @@ end
 
 
 function SWEP:AttachmentCheck()
-    
-    
 	if !self.VElements then return end
 
 	local primary = GAMEMODE.PrimaryWeapons[self:GetClass()]
@@ -206,7 +206,6 @@ function SWEP:AttachmentCheck()
 		self.VElements.scope and self.VElements.scope.AuxIronSightsAng
 		self:SetIron(sight, pos, ang)
 	end
-    
 end
 
 function SWEP:DrawWeaponSelection( x, y, wide, tall, alpha )
@@ -434,8 +433,8 @@ function SWEP:ShootBullet( damage, num_bullets, aimcone )
     bullet.Spread 	= Vector( Cone+HipCone, Cone+HipCone, 0 )	-- Aim Cone
     bullet.Damage	= self.Primary.Damage
     
-    if !self.VElements then
-        self.VElements = {}
+    if !self.VElements then 
+        self.VElements = self.backupVElements
         self:AttachmentCheck()
     end
     
