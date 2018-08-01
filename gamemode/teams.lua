@@ -16,10 +16,10 @@ To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-
 	Cleaned Code
 ]]--
 
-team.SetUp( 50, "No Team", Color(250,250,0,255) )
+team.SetUp( 50, "Hermits (No Team)", Color(226,226,226,255) )
 
 GM.Teams = {}
-GM.Teams[50] = { Leader=nil, Name="No Team", Password="", Color=Color(250,250,0,255) }
+GM.Teams[50] = { Leader=nil, Name="Hermits (No Team)", Password="", Color=Color(226,226,226,255) }
 GM.TeamCount = 50 -- 50 is the default "No Team" team
 GM.TeamRestrictions = { "no team", "<no team>", "<enter name here>", "admin", "admins", "moderator", "moderators", "superadmin", "superadmins", "operator", "operators" } -- Add them all LOWER CASED
 
@@ -30,19 +30,6 @@ local function MessageTeam( index, msg, ignore )
 		end
 	end
 end
-
---[[function SendTeamToClient( ply, index, leader, name, color )
-	GAMEMODE.Net:SendTeamToClient( ply, index, leader, name, color )
-	--See sv_networking.lua, GAMEMODE.Net:SendTeamToClient
-	-- umsg.Start( "sh_teamcreated", ply )
-	-- 	umsg.Short( index )
-	-- 	umsg.Entity( leader )
-	-- 	umsg.String( name )
-	-- 	umsg.Short( color.r )
-	-- 	umsg.Short( color.g )
-	-- 	umsg.Short( color.b )
-	-- umsg.End()
-end]]
 
 function SendTeamsToClient( ply )
 	for i=51, GAMEMODE.TeamCount do
@@ -55,23 +42,10 @@ hook.Add( "PlayerInitialSpawn", "SendTeamsToClient", SendTeamsToClient )
 
 function SendDisbandToClients( index )
 	GAMEMODE.Net:SendDisbandToClients( index )
-	--See sv_networking.lua, GAMEMODE.Net:SendDisbandToClients
-	-- local rf = RecipientFilter()
-	-- rf:AddAllPlayers()
-	-- umsg.Start( "sh_teamdisbanded", rf )
-	-- 	umsg.Short( index )
-	-- umsg.End()
 end
 
 function SendLeaderToClients( index, leader )
 	GAMEMODE.Net:SendLeaderToClients( index, leader )
-	--See sv_networking.lua, GAMEMODE.Net:SendLeaderToClients
-	-- local rf = RecipientFilter()
-	-- rf:AddAllPlayers()
-	-- umsg.Start( "sh_teamleaderchange", rf )
-	-- 	umsg.Short( index )
-	-- 	umsg.Entity( leader )
-	-- umsg.End()
 end
 
 function GM:TeamExists( name )

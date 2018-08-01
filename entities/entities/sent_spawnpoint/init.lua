@@ -82,8 +82,6 @@ function ENT:OnRemove()
 			net.WriteBool(true)
 		net.Broadcast()
 	end
-	
-	print(ply:GetName().." has "..ply.PointCount.." spawn points.")
 end
 
 function ENT:OnTakeDamage(dmg)
@@ -94,6 +92,7 @@ end
 
 function ENT:Think()
 	local ply = self.Owner
+
 	if !IsValid( ply ) and self:GetOwnerUID() != nil then
 		if self.PlayerLeft == 0 then
 			self.PlayerLeft = CurTime()
@@ -102,23 +101,17 @@ function ENT:Think()
 		end
 		return
 	end
+
 	if self:GetPos() != self.StartPos then ply:SendMessage( "Obstruction detected.", "Spawnpoint", false ) self:Remove() end
+
 	self:SetMoveType( MOVETYPE_NONE )
+
 	local hp = self:Health()
 	local hpmax = self:GetMaxHealth()
 	local c = 255 * (hp / hpmax)
+
 	self:SetHealth(math.Clamp(hp + 0.25,1,hpmax))
 	self:SetColor( Color(c,c,c,255) )
-	
-	--[[local pos, up = self:LocalToWorld( self:OBBCenter() ), self:GetAngles():Up()
-	local tr = util.TraceLine( {start=pos,endpos=pos+60*up,filter=self} )
-	if tr.Hit and !self.Blocked then
-		self.Blocked = true
-		ply.SpawnPoint[self:EntIndex()] = nil
-	elseif !tr.Hit and self.Blocked then
-		self.Blocked = false
-		ply.SpawnPoint[self:EntIndex()] = self
-	end]]
 	
 	if CurTime() - self.LastTeamUpdate > 5 then
 		self:SetTeam( ply:Team() )

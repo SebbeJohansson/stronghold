@@ -110,20 +110,6 @@ hook.Add( "OnReloaded", "Stronghold_AutoRefresh", GM.Reinitialize )
 function GM:Think()
 	local curtime = CurTime()
 	
-	-- Ragdolls
-	--[[for i, tbl in ipairs( GAMEMODE.Ragdolls ) do
-		if IsValid( tbl.ent ) then
-			local scale = math.Clamp( (curtime - tbl.time), 0, 1 ) * -1 +1
-			local alpha = 255 *scale
-			tbl.ent:SetColor( Color(alpha,alpha,alpha,alpha) )
-			tbl.ent:SetRenderMode( alpha < 255 and RENDERMODE_TRANSALPHA or RENDERMODE_NORMAL )
-			
-			if scale == 0 then
-				table.remove( GAMEMODE.Ragdolls, i )
-			end
-		end
-	end]]
-	-- End Ragdolls
 	-- self:WeaponsAttachedThink()
 	-- Weapon switch
 	local ply = LocalPlayer()
@@ -147,18 +133,14 @@ function GM:Think()
 	
 	self:ScreenEffectsThink()
 	self:HatEffectsThink()
-	
-	
 
 	if LocalPlayer():KeyDown(IN_JUMP) and ply.JetPack then
 		local effectdata = EffectData()
 		effectdata:SetOrigin( ply:GetPos()+LocalPlayer():GetAngles():Up()*-30 )	
 		effectdata:SetScale(1)
 		effectdata:SetAngles(Angle(-90,0,0))
-		--print(head:GetAngles())
 		util.Effect( "silenced", effectdata )
 	end
-	--print(ply.JetPack)
 end
 
 function GM:CreateClientRagdoll(ply)
@@ -193,8 +175,6 @@ function GM:CreateClientRagdoll(ply)
 	for i = 1, ragdoll:GetPhysicsObjectCount() do
 		ragdoll:GetPhysicsObjectNum( i -1 ):SetVelocity( ply:GetVelocity() )
 	end
-	
-	--table.insert( GAMEMODE.Ragdolls, {ent = ragdoll, time = CurTime()} )
 end
 
 -- Various spawning functions
@@ -207,8 +187,6 @@ end
 function GM:OnUndo( name, strCustomString )
 	if self.GameOver then return end
 
-	Msg( name.. " undone\n" )
-
 	if !strCustomString then
 		chat.AddText( Color(200,200,50,255), "#Undone_".. name )
 	else	
@@ -220,30 +198,29 @@ end
 
 function GM:RagdollThink()
 	for _, pl in ipairs( player.GetAll() ) do
-	if pl:Health() <=0 then
-	pl.Dead = true
-	else
-	pl.Dead = false
-	end
-		if pl.Dead and !pl.Doll then
-			self:CreateClientRagdoll(pl)
-			pl.Doll = true
-			timer.Simple(2, function() pl.JetPack = false end)
-		elseif pl:GetRagdollEntity() != NULL and !pl.Dead  then
-			pl:GetRagdollEntity():Remove()
-			pl.Doll = false
-		end
-		if pl.JetPack and pl.Dead then
-			local head=pl:GetRagdollEntity():GetPhysicsObjectNum( 1 )
-			head:ApplyForceCenter( (head:GetAngles():Forward()*1200)*FrameTime()*100 )
-			local BonePos, BoneAng 		= pl:GetRagdollEntity():GetBonePosition( pl:GetRagdollEntity():LookupBone("ValveBiped.Bip01_Spine2") )
-			local effectdata = EffectData()
-			effectdata:SetOrigin( BonePos+BoneAng:Right()*8 )	
-			effectdata:SetScale(1)
-			effectdata:SetAngles(head:GetAngles())
-			--print(head:GetAngles())
-			util.Effect( "silenced", effectdata )
-		end
+        if pl:Health() <=0 then
+            pl.Dead = true
+        else
+            pl.Dead = false
+        end
+        if pl.Dead and !pl.Doll then
+            self:CreateClientRagdoll(pl)
+            pl.Doll = true
+            timer.Simple(2, function() pl.JetPack = false end)
+        elseif pl:GetRagdollEntity() != NULL and !pl.Dead  then
+            pl:GetRagdollEntity():Remove()
+            pl.Doll = false
+        end
+        if pl.JetPack and pl.Dead then
+            local head=pl:GetRagdollEntity():GetPhysicsObjectNum( 1 )
+            head:ApplyForceCenter( (head:GetAngles():Forward()*1200)*FrameTime()*100 )
+            local BonePos, BoneAng 		= pl:GetRagdollEntity():GetBonePosition( pl:GetRagdollEntity():LookupBone("ValveBiped.Bip01_Spine2") )
+            local effectdata = EffectData()
+            effectdata:SetOrigin( BonePos+BoneAng:Right()*8 )	
+            effectdata:SetScale(1)
+            effectdata:SetAngles(head:GetAngles())
+            util.Effect( "silenced", effectdata )
+        end
 	end
 end
 
@@ -310,7 +287,7 @@ self:RagdollThink()
 	
 	BreathSmooth = math.Clamp( BreathSmooth *0.9 +bob:Length() *0.07, 0, 700 )
 
-	BreathTimer = 0--!ply:KeyDown(IN_ATTACK2) and BreathTimer +BreathSmooth *FrameTime() *0.04 or ply:KeyDown(IN_ATTACK2) and 0
+	BreathTimer = 0
 	-- Roll on strafe (smoothed)
 	LastStrafeRoll = (LastStrafeRoll *3) +(ang:Right():DotProduct( vel ) *0.0001 *VelSmooth *0.3 )
 	LastStrafeRoll = LastStrafeRoll *0.18 -- Change this
@@ -343,8 +320,6 @@ self:RagdollThink()
 	local running 	= ply:KeyDown( IN_SPEED ) and ply:KeyDown( bit.bor(IN_FORWARD,IN_BACK,IN_MOVELEFT,IN_MOVERIGHT) ) 	
 	local scale 	= (running and 3 or 1) *0.01
 	local wep 		= ply:GetActiveWeapon()
-	--ply.LastAngles = vm_angles.yaw
-	--ply.Output = ply.JerkStop
 	return ret 
 end
 
@@ -371,8 +346,8 @@ hook.Add( "ChatText", "ChatTextHook", function( intPIndex, strName, strText, str
 	end
 end )
 
-local CHATHINT_MANDATORY, CHATHINT_MANDATORY_COUNT, CHATHINT_MANDATORY_PERCENT = { ["how"]=true, ["do"]=true, ["i"]=true, ["you"]=true, ["they"]=true }, 5, 0.40
-local CHATHINT_TRIGGERS = { ["create"]=true, ["buy"]=true, ["get"]=true, ["make"]=true, ["place"]=true, ["play"]=true, ["spawn"]=true }
+local CHATADVERT_MANDATORY, CHATADVERT_MANDATORY_COUNT, CHATADVERT_MANDATORY_PERCENT = { ["how"]=true, ["do"]=true, ["i"]=true, ["you"]=true, ["they"]=true }, 5, 0.40
+local CHATADVERT_TRIGGERS = { ["create"]=true, ["buy"]=true, ["get"]=true, ["make"]=true, ["place"]=true, ["play"]=true, ["spawn"]=true }
 hook.Add( "OnPlayerChat", "ChatHook", function( ply, strText, bTeamOnly, bPlayerIsDead )
 	if ply == LocalPlayer() then
 		-- LocalPlayer stuff
@@ -382,11 +357,11 @@ hook.Add( "OnPlayerChat", "ChatHook", function( ply, strText, bTeamOnly, bPlayer
 		local mandatory, trigger = 0, false
 		local explode = string.Explode( " ", no_punc )
 		for _, v in ipairs(explode) do
-			if CHATHINT_MANDATORY[v] then mandatory = mandatory + (1 / CHATHINT_MANDATORY_COUNT) end
-			if CHATHINT_TRIGGERS[v] then trigger = true end
+			if CHATADVERT_MANDATORY[v] then mandatory = mandatory + (1 / CHATADVERT_MANDATORY_COUNT) end
+			if CHATADVERT_TRIGGERS[v] then trigger = true end
 		end
 		
-		if trigger and mandatory >= CHATHINT_MANDATORY_PERCENT then
+		if trigger and mandatory >= CHATADVERT_MANDATORY_PERCENT then
 			timer.Simple(0.1, function()
 				chat.AddText(Color(0,255,0),"Hint: ",Color(100,200,255),"Press F1 and view the tutorial if you don't know how to play.")
 				chat.PlaySound()

@@ -107,8 +107,6 @@ elseif CLIENT then
 			self.GhostEntity:SetRenderMode( RENDERMODE_TRANSALPHA )
 			self.GhostEntity:SetPos( pos )
 			self.GhostEntity:SetAngles( ang )
-			--self.GhostEntity:Spawn()
-			--self.GhostEntity:SetMoveType( MOVETYPE_NONE )
 		end
 		
 		self.GhostEntity:SetPos( pos )

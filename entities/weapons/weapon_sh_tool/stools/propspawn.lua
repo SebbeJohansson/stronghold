@@ -48,7 +48,7 @@ function TOOL:LeftClick( trace )
 	local ply = self:GetOwner()
 	local model = self:GetClientInfo( "model" )
 	
-	if --[[!trace.Hit or]] !gamemode.Call( "PlayerSpawnProp", ply, model ) then return false end
+	if !gamemode.Call( "PlayerSpawnProp", ply, model ) then return false end
 	
 	local ent = ents.Create( "prop_physics" )
 	if IsValid( ent ) then
@@ -77,7 +77,7 @@ function TOOL:LeftClick( trace )
 		TargetAngle:RotateAroundAxis( TargetAngle:Up(), AngleOffset.y )
 		TargetAngle:RotateAroundAxis( TargetAngle:Forward(), AngleOffset.r )
 		
-		if ply:KeyDown( IN_SPEED ) --[[self.LOCKED_TO_WORLD]] --[[ply:KeyDown( IN_USE ) and ply:KeyDown( IN_SPEED )]] then
+		if ply:KeyDown( IN_SPEED ) then
 			TargetAngle = angnorm( TargetAngle )
 			TargetAngle.p = round( TargetAngle.p, snapdegrees, 360 )
 			TargetAngle.y = round( TargetAngle.y, snapdegrees, 360 )
@@ -131,8 +131,9 @@ function TOOL:LeftClick( trace )
 		if ply:GetGroundEntity().StackBTime then
 			ent.StackBTime = ent.StackBTime + ply:GetGroundEntity().StackBTime
 			if ply:GetGroundEntity().StackBTime > 0 then
-				ply:SendMessage( "Unrecognized coordinates; triangulating position, build time may be affected.", "Prop spawn", true )
-				ent.BuildTime = (ent.StackBTime*10)-9
+				ply:SendMessage( "Tricky building location, build time may be affected.", "Prop spawn", true )
+				//ply:SendMessage( "Unrecognized coordinates; triangulating position, build time may be affected.", "Prop spawn", true )
+				ent.BuildTime = ent.StackBTime*2//(ent.StackBTime*10)-9
 			end
 		else
 			ent.BuildTime = 1
@@ -175,18 +176,18 @@ function TOOL:LeftClick( trace )
 end
 
 local ERROR_SOUND = Sound( "buttons/button10.wav" )
+-- Function used when stacking.
 function TOOL:RightClick( trace )
 	if CLIENT then return true end
 	
 	local validprop = IsValid( self.TRACE.Entity ) and self.TRACE.Entity:GetClass() == "prop_physics"
-	
 	local ply = self:GetOwner()
 	local model = self:GetClientInfo( "model" )
 	if !ply:GetGroundEntity() then return end
 	if self.SWEP:GetFireMode() == 1 and validprop then model = self.TRACE.Entity:GetModel() end
 	if !model then return false end
 	
-	if --[[!trace.Hit or]] !gamemode.Call( "PlayerSpawnProp", ply, model ) then return false end
+	if !gamemode.Call( "PlayerSpawnProp", ply, model ) then return false end
 	
 	if validprop then
 		local ent = ents.Create( "prop_physics" )
@@ -266,9 +267,11 @@ function TOOL:RightClick( trace )
 			end
 		end
 		if ply:GetGroundEntity().StackBTime then 
+            Msg(ply:GetGroundEntity().StackBTime, "\n")
 			ent.StackBTime = ent.StackBTime + self.TRACE.Entity.StackBTime
-			ent.BuildTime = (ent.StackBTime*10)-9
-			ply:SendMessage( "Unrecognized coordinates; triangulating position, build time may be affected.", "Prop spawn", true )
+			//ply:SendMessage( "Unrecognized coordinates; triangulating position, build time may be affected.", "Prop spawn", true )
+            ply:SendMessage( "Tricky building location, build time may be affected.", "Prop spawn", true )
+			ent.BuildTime = ent.StackBTime*2//(ent.StackBTime*10)-9
 		else
 			ent.BuildTime = ent.StackBTime
 		end
@@ -425,7 +428,7 @@ function TOOL:UpdateGhostEntity()
 		TargetAngle:RotateAroundAxis( TargetAngle:Up(), AngleOffset.y )
 		TargetAngle:RotateAroundAxis( TargetAngle:Forward(), AngleOffset.r )
 		
-		if ply:KeyDown( IN_SPEED ) --[[self.LOCKED_TO_WORLD]] --[[ply:KeyDown( IN_USE ) and ply:KeyDown( IN_SPEED )]] then
+		if ply:KeyDown( IN_SPEED ) then
 			TargetAngle = angnorm( TargetAngle )
 			TargetAngle.p = round( TargetAngle.p, snapdegrees, 360 )
 			TargetAngle.y = round( TargetAngle.y, snapdegrees, 360 )
@@ -497,10 +500,6 @@ function TOOL:FreezeMovement()
 end
 
 function TOOL:DrawHUD()
-	if self.SWEP:GetFireMode() == 0 and self.Owner:KeyDown(IN_USE) then
-	--draw.SimpleText("Garry broke prop rotating yay!", "debugfixed", ScrW()/2, ScrH()/2+20, Color(255,255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-	--draw.SimpleText("It SHOULD work now.", "debugfixed", ScrW()/2, ScrH()/2+40, Color(255,255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-	end
 	if self.SWEP:GetFireMode() != 1 then return end
 	
 	local str = "<ERROR>"
@@ -526,11 +525,6 @@ function TOOL:DrawHUD()
 		col.b = 255
 	end
 	
-	--[[surface.SetTextColor( col )
-	surface.SetFont( "DermaDefault" )
-	local tw, th = surface.GetTextSize( str )
-	surface.SetTextPos( round(ScrW()/2-tw/2,0), ScrH()/2+16 )
-	surface.DrawText( str )]]
 	draw.SimpleTextOutlined( str, "DermaDefault", ScrW()*0.50, ScrH()*0.50+16, col, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0,0,0,255) )
 	
 	if self.TRACE and IsValid( self.TRACE.Entity ) then
