@@ -33,51 +33,107 @@ local function PlayerCountInSphere( pos, radius, ignore )
 	return count
 end
 
-function GM:ReadyForInfo( ply )
-	local filename = "stronghold/playerinfo/".. string.gsub( ply:SteamID(), ":", "_" ).. ".txt"
+function GM:ReadyForInfo( ply )	
+	ply.Statistics = {}
+	ply.Items = {}
+	ply.Loadouts = {}
+	ply.Licenses = {}
 	
-	local raw = file.Read( filename, "DATA" ) or ""
-	local tbl = glon.decode( raw ) or {}
-		
-	ply.Statistics = tbl.Statistics or { name = ply:GetName() }
-	ply.Items = tbl.Items or {
-		["buckshot"] 	= { type=3, count=1000 },
-		["ar2"] 		= { type=3, count=1000 },
-		["smg1"] 		= { type=3, count=1000 },
-		["pistol"] 		= { type=3, count=1000 },
-		["money"] 		= { type=0, count=100 }
+	DB.Query{
+		sql="SELECT * FROM stats WHERE steamid='"..ply:SteamID().."'",
+		callback=function(data)
+			if #data == 0 then
+				ply.Statistics = { name = ply:GetName() }
+			else
+				local d = data[1]
+				for k,v in pairs(d) do
+					if k == "money" then
+						 ply.Items["money"] = {type=0, count=v}
+						 ply.Money = v
+						 continue
+					end
+					if k == "steamid" then continue end
+					ply.Statistics[k] = v 
+				end
+			end
+		end
 	}
-	ply.Loadouts = tbl.Loadouts or {}
-	ply.Licenses = tbl.Licenses
 	
-	-- Fix  Licenses table --
-	ply.Licenses = ply.Licenses or { [1]={weapon_sh_mp5a4=-1}, [2]={weapon_sh_p228=-1}, [5]={} }
-	if not ply.Licenses[1] then ply.Licenses[1] = {} end
-	if not ply.Licenses[2] then ply.Licenses[2] = {} end
-	if not ply.Licenses[5] then ply.Licenses[5] = {} end
-	if not ply.Licenses[1]["mp5a4"] then ply.Licenses[1]["mp5a4"] = -1 end
-	if not ply.Licenses[2]["p228"] then ply.Licenses[2]["p228"] = -1 end
-	-------------------------
+	DB.Query{
+		sql="SELECT * FROM items WHERE steamid='"..ply:SteamID().."'",
+		callback=function(data)
+			if #data == 0 then
+				ply.Items = {
+						["buckshot"] 	= { type=3, count=1000 },
+						["ar2"] 		= { type=3, count=1000 },
+						["smg1"] 		= { type=3, count=1000 },
+						["pistol"] 		= { type=3, count=1000 },
+						["money"] 		= { type=0, count=100 }
+					}
+			else
+				for k,v in pairs(data) do
+					ply.Items[data[k].item] = util.JSONToTable(data[k].itemstats)
+				end
+			end
+		end
+	}
 	
-	ply.Money = ply.Items["money"] and ply.Items["money"].count or 0
-	ply.Items["money"] = nil
+	DB.Query{
+		sql="SELECT * FROM equip WHERE steamid='"..ply:SteamID().."'",
+		callback=function(data)
+			if #data == 0 then
+				ply.Loadouts = {}
+				ply:SetLoadoutPrimary( "" )
+				ply:SetLoadoutSecondary( "" )
+				ply:SetLoadoutExplosive( "" )
+			else
+				local d = data[1]
+				local LastEquip = util.JSONToTable(d.lastequip)
+				local Loadouts = util.JSONToTable(d.loadout)
+				ply.Loadouts = Loadouts
+				ply:SetLoadoutPrimary( LastEquip.primary)
+				ply:SetLoadoutSecondary( LastEquip.secondary )
+				ply:SetLoadoutExplosive( LastEquip.explosive )
+			end
+		end
+	}
+	
+	DB.Query{
+		sql="SELECT * FROM licenses WHERE steamid='"..ply:SteamID().."'",
+		callback=function(data)
+			if #data == 0 then
+				ply.Licenses = { [1]={weapon_sh_mp5a4=-1}, [2]={weapon_sh_p228=-1}, [5]={} }
+				if not ply.Licenses[1] then ply.Licenses[1] = {} end
+				if not ply.Licenses[2] then ply.Licenses[2] = {} end
+				if not ply.Licenses[5] then ply.Licenses[5] = {} end
+				if not ply.Licenses[1]["mp5a4"] then ply.Licenses[1]["mp5a4"] = -1 end
+				if not ply.Licenses[2]["p228"] then ply.Licenses[2]["p228"] = -1 end
+			else
+				ply.Licenses[1] = {}
+				ply.Licenses[2] = {}
+				ply.Licenses[3] = {}
+				ply.Licenses[4] = {}
+				ply.Licenses[5] = {}
+				ply.Licenses[6] = {}
+				ply.Licenses[7] = {}
+				for k,v in pairs(data) do
+					local items = data[k].items
+					local statx = data[k].stat
 
-	ply:SetLoadoutPrimary( tbl.LastEquip and tbl.LastEquip.primary or "" )
-	ply:SetLoadoutSecondary( tbl.LastEquip and tbl.LastEquip.secondary or "" )
-	ply:SetLoadoutExplosive( tbl.LastEquip and tbl.LastEquip.explosive or "" )
+					ply.Licenses[data[k].slot][items] = tonumber(statx)
+				end
+			end
+		end
+	}
 	
 	ply:SetInitialized( INITSTATE_OK )
 
-	--[[if ply:IsDonor() then
-		self.DWeb:SetupTierLicense( ply )
-	else
-		self.DWeb:ClenupTierRewards( ply )
-	end]]
-
-	GAMEMODE.Net:SendClientItems( ply )
-	GAMEMODE.Net:SendClientLoadouts( ply )
-	GAMEMODE.Net:SendClientLicenses( ply )
-	GAMEMODE.Net:BroadcastMarkerUpdate()
+	timer.Simple(2, function()
+		GAMEMODE.Net:SendClientItems( ply )
+		GAMEMODE.Net:SendClientLoadouts( ply )
+		GAMEMODE.Net:SendClientLicenses( ply )
+		GAMEMODE.Net:BroadcastMarkerUpdate()
+	end)
 	
 	ply:ConCommand( "sh_help" )
 	for _, v in ipairs(player.GetAll()) do --Send bounty info to new players.
@@ -98,7 +154,7 @@ concommand.Add( "sh_readyforinfo", function( ply )
 		return
 	end
 	
-	if not ply:HasFetchedInfo() then
+	--[[if not ply:HasFetchedInfo() then
 		local name = ply:EntIndex().. "_rinfowait"
 
 		timer.Create( name, 1, 0, function()
@@ -109,9 +165,9 @@ concommand.Add( "sh_readyforinfo", function( ply )
 				timer.Destroy( name )
 			end
 		end )
-	else
+	else]]--
 		GAMEMODE:ReadyForInfo( ply )
-	end
+	--end
 end )
 
 function GM:PlayerInitialSpawn( ply )

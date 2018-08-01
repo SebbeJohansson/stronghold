@@ -80,9 +80,10 @@ include( "playersounds.lua" )
 include( "voting.lua" )
 include( "gbux.lua" )
 include( "sv_adverts.lua" )
-include( "sv_userwebsync.lua" )
 include( "sv_mapmarkers.lua" )
 include( "sh_plugins.lua" )
+
+include( "database.lua" )
 
 AddCSLuaFile( "sh_compat.lua" )
 
