@@ -124,7 +124,7 @@ function GM:Think()
 		end
 	end]]
 	-- End Ragdolls
-	self:WeaponsAttachedThink()
+	-- self:WeaponsAttachedThink()
 	-- Weapon switch
 	local ply = LocalPlayer()
 	local wep = ply:GetActiveWeapon()

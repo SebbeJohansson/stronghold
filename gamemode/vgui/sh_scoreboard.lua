@@ -4,10 +4,10 @@ surface.CreateFont("ScoreboardColumnRow", {size=24,font="BebasNeue"})
 surface.CreateFont("ScoreboardGangRow", {size=25,font="BebasNeue"})
 surface.CreateFont("ScoreboardRow", {size=20,font="BebasNeue"})
 
-CreateConVar("gog_sbcur",1,FCVAR_ARCHIVE,"Enables/Disables the cursor in the scoreboard.")
+CreateConVar("sh_sbcur",1,FCVAR_ARCHIVE,"Enables/Disables the cursor in the scoreboard.")
 
 function GM:CreateScoreboard()
-	local xsize = ScrW()*0.85
+	local xsize = ScrW()*0.6
 	local ysize = ScrH()*0.8
 	
 	local plylist = vgui.Create("DPanelList")
@@ -18,8 +18,8 @@ function GM:CreateScoreboard()
 	plylist.TeamPanels = {}
 	plylist.Columns = {
 		Name = 0.008,
-		Rank = 0.3,
-		Kills = 0.8,
+		Rank = 0.45,
+		Kills = 0.77,
 		Deaths = 0.85,
 		Ping = 0.95
 	}
@@ -184,7 +184,7 @@ function GM:ScoreboardPlayerRow(ply)
 end
 
 function GM:ScoreboardShow()
-	local sbcur = math.floor(cvars.Number("gog_sbcur"))
+	local sbcur = math.floor(cvars.Number("sh_sbcur"))
 	if sbcur == 0 then
 		gui.EnableScreenClicker(false)
 	else

@@ -123,16 +123,51 @@ function meta:SaveData()
 	end
 	
 	if data.Items == nil then data.Items = {} end
-	data.Items["money"] = { type=0, count=self.Money }
 	data.Licenses 		= self.Licenses
 	data.LastEquip		= {
 		primary		= self:GetLoadoutPrimary(),
 		secondary	= self:GetLoadoutSecondary(),
 		explosive	= self:GetLoadoutExplosive()
 	}
+
+	local LOADOUT, LASTEQUIP
+
+	LOADOUT = util.TableToJSON(data["Loadouts"])
+	LASTEQUIP = util.TableToJSON(data["LastEquip"])
 	
-	local encoded = glon.encode( data )
-	file.Write( "stronghold/playerinfo/".. string.gsub(steamid, ":", "_").. ".txt", encoded )
+	DB.Query{sql="INSERT INTO equip(steamid,loadout,lastequip) VALUES('"..steamid.."','"..LOADOUT.."','"..LASTEQUIP.."') ON DUPLICATE KEY UPDATE steamid=VALUES(steamid),loadout=VALUES(loadout),lastequip=VALUES(lastequip)"}
+
+	-- This is for Licenses
+	DB.StartBundle()
+		for k,v in pairs(data["Licenses"]) do
+			for f,u in pairs(data["Licenses"][k]) do
+				DB.Query{sql="INSERT INTO licenses(steamid,slot,items,stat) VALUES('"..steamid.."',"..k..",'"..f.."','"..u.."') ON DUPLICATE KEY UPDATE steamid=VALUES(steamid),slot=VALUES(slot),items=VALUES(items),stat=VALUES(stat)"}
+			end
+		end
+	DB.EndBundle()
+
+	-- This is for Items table/Structure
+	DB.StartBundle()
+		for a,b in pairs(data["Items"]) do
+			if a == "money" then continue end
+			DB.Query{sql="INSERT INTO items(steamid,item,itemstats) VALUES('"..steamid.."','"..a.."','"..util.TableToJSON(b).."') ON DUPLICATE KEY UPDATE steamid=VALUES(steamid),item=VALUES(item),itemstats=VALUES(itemstats)"}
+		end
+	DB.EndBundle()
+
+	-- This is the Stats of the players.
+	local ValVals = "steamid,money"
+	local ValValD = "'"..steamid.."','".. self.Money.."'"
+	local ValValP = "steamid=VALUES(steamid),money=VALUES(money)"
+	for k,v in pairs(data.Statistics) do
+		ValVals = ValVals..","..k
+		ValValP = ValValP..","..k.."=VALUES("..k..")"
+		if k == "name" then
+			ValValD = ValValD..",'"..v.."'"
+		else
+			ValValD = ValValD..","..v
+		end
+	end
+	DB.Query{sql="INSERT INTO stats("..ValVals..") VALUES(".. ValValD ..") ON DUPLICATE KEY UPDATE "..ValValP}
 end
 
 function meta:FailedInitialize()
