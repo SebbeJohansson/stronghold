@@ -52,20 +52,14 @@ end
    Desc:	Remove a single entity
 ---------------------------------------------------------]]--  
 function TOOL:LeftClick( trace )
-
 	if ( DoRemoveEntity( trace.Entity ) ) then
-	
 		if ( !CLIENT ) then
 			MsgAll( self:GetOwner():Nick(), " removed ", trace.Entity:GetClass(), "\n" )
 			self:GetOwner():SendLua( "achievements.Remover()" );
 		end
-		
 		return true
-	
 	end
-	
 	return false
-		
 end
 
 --[[---------------------------------------------------------
@@ -73,7 +67,6 @@ end
    Desc:	Remove this entity and everything constrained
 ---------------------------------------------------------]]--  
 function TOOL:RightClick( trace )
-
 	if (!trace.Entity) then return false end
 	if (!trace.Entity:IsValid()) then return false end
 	if (trace.Entity:IsPlayer()) then return false end
@@ -86,11 +79,9 @@ function TOOL:RightClick( trace )
 	
 	// Loop through all the entities in the system
 	for _, Entity in pairs( ConstrainedEntities ) do
-	
 		if ( DoRemoveEntity( Entity ) ) then
 			Count = Count + 1
 		end
-
 	end
 	
 	if ( Count > 0 ) then
@@ -101,11 +92,13 @@ function TOOL:RightClick( trace )
 end
 
 function TOOL:Reload( trace )
-	if (!trace.Entity or !trace.Entity:IsValid() or trace.Entity:IsPlayer() ) then return false
-	elseif ( CLIENT ) then return true
+	if (!trace.Entity or !trace.Entity:IsValid() or trace.Entity:IsPlayer() ) then 
+        return false
+	elseif ( CLIENT ) then 
+        return true
 	end
 
 	local  bool = constraint.RemoveAll( trace.Entity )
-	return bool
 
+	return bool
 end

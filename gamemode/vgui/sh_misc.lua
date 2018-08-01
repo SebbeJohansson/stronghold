@@ -20,7 +20,6 @@ function PANEL:ChooseOption( value, index )
 	end
 
 	self:SetText( value )
-	--self.TextEntry:ConVarChanged( value )
 	
 	if self.m_strConVar and self.m_strConVar != "" then
 		RunConsoleCommand( self.m_strConVar, index )
@@ -31,8 +30,14 @@ end
 
 function PANEL:SetConVar( convar )
 	self.m_strConVar = convar
-	local index = GetConVarNumber( convar )
-	self:ChooseOption( self:GetOptionText(index), index )
+    local convarObj = GetConVar( convar )
+	local index = convarObj:GetFloat()
+    local txt = self:GetOptionText(index)
+    if !txt then
+        index = 1
+        txt = self:GetOptionText(1)
+    end
+	self:ChooseOption( txt, index )
 end
 
 function PANEL:ConVarNumberThink()
@@ -75,10 +80,7 @@ function PANEL:ApplySchemeSettings()
 	self:SetTextInset( ExtraInset, 4 )
 	local w, h = self:GetContentSize()
 	h = 24
-	--if ( Active ) then h = 28 end
-
 	self:SetSize( w + 10, h )
-	
 	
 	DLabel.ApplySchemeSettings( self )
 		

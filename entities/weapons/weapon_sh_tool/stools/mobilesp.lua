@@ -162,13 +162,10 @@ elseif CLIENT then
 		if !IsValid( self.GhostEntity ) or model !=self.GhostEntity:GetModel() then
 			if IsValid( self.GhostEntity ) then self.GhostEntity:Remove() end
 			self.GhostEntity = ClientsideModel( model )
-			--self.GhostEntity:SetModel( "models/props_combine/combine_mine01.mdl" )
 			self.GhostEntity:SetColor( Color(255,0,0,200) )
 			self.GhostEntity:SetRenderMode( RENDERMODE_TRANSALPHA )
 			self.GhostEntity:SetPos( pos )
 			self.GhostEntity:SetAngles( ang )
-			--self.GhostEntity:Spawn()
-			--self.GhostEntity:SetMoveType( MOVETYPE_NONE )
 		end
 		
 		self.GhostEntity:SetPos( pos )

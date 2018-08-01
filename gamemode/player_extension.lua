@@ -502,6 +502,11 @@ function meta:AddMoney( amt )
 	self.Money = self.Money + amt
 end
 
+function meta:RemoveMoney( amt )
+	if !self.Money then self.Money = 0 end
+	self.Money = self.Money - amt
+end
+
 function meta:SetMoney( amt )
 	self.Money = type(amt) == "number" and amt or tonumber(amt)
 	if SERVER then self:SaveMoney() end

@@ -39,15 +39,15 @@ function GM:OptionsInit()
 	
 	self.OptionsFrame:AddOption( "HUD (Heads Up Display)", "CheckBox", "Show HUD", "sh_hudenabled" )
 
-	local minimalhudlabel = vgui.Create( "DLabel" ) minimalhudlabel:SetText( "Use Minimal HUD" ) 
+	local minimalhudlabel = vgui.Create( "DLabel" )
+    minimalhudlabel:SetText( "Choose HUD Mode" ) 
 	local minimalhudmode = vgui.Create( "sh_combobox" )
 	minimalhudmode:Dock( FILL )
 	self.OptionsFrame:AddOption( "HUD (Heads Up Display)", "AddItem", minimalhudlabel, minimalhudmode )
 	minimalhudmode:AddChoice( "Normal" )
 	minimalhudmode:AddChoice( "Slim" )
-	--minimalhudmode:AddChoice( "Health + Ammo" )
 	minimalhudmode:SetConVar( "sh_hudminimal" )
-	
+
     self.OptionsFrame:AddOption( "HUD (Heads Up Display)", "CheckBox", "Enable Team Dot", "sh_teamdot" )
     self.OptionsFrame:AddOption( "HUD (Heads Up Display)", "CheckBox", "Enable Team Outline", "sh_teamoutline" )
     self.OptionsFrame:AddOption( "HUD (Heads Up Display)", "CheckBox", "Enable Team Outline ESP", "sh_teamoutline_esp" )

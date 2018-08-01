@@ -19,45 +19,23 @@ To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-
 		cleaned code
 ]]--
 
-team.SetUp( 50, "No Team", Color(250,250,0,255) )
+team.SetUp( 50, "Hermits (No Team)", Color(226,226,226,255) )
 
 GM.Team = {}
 GM.Teams = {}
-GM.Teams[50] = { Leader=nil, Name="No Team", Color=Color(250,250,0,255) }
+GM.Teams[50] = { Leader=nil, Name="Hermits (No Team)", Color=Color(226,226,226,255) }
 
--- local function TeamCreated( um )
--- 	local index = um:ReadShort()
--- 	local leader = um:ReadEntity() or nil
--- 	local name = um:ReadString() or "<No Name>"
--- 	local color = Color( um:ReadShort() or math.random(50,255), um:ReadShort() or math.random(50,255), um:ReadShort() or math.random(50,255), 255 )
--- 	GAMEMODE.Teams[index] = { Leader=leader, Name=name, Color=color }
--- 	team.SetUp( index, name, color )
--- end
--- usermessage.Hook( "sh_teamcreated", TeamCreated )
 function GM.Team:TeamCreated( intIndex, pLeader, strName, colColor )
 	GAMEMODE.Teams[intIndex] = { Leader=pLeader, Name=strName, Color=colColor }
 	team.SetUp( intIndex, strName, colColor )
 end
 
--- local function TeamDisbanded( um )
--- 	local index = um:ReadShort()
--- 	GAMEMODE.Teams[index] = nil
--- 	team.GetAllTeams()[index] = nil
--- end
--- usermessage.Hook( "sh_teamdisbanded", TeamDisbanded )
 function GM.Team:TeamDisbanded( intIndex )
 	if GAMEMODE.GameOver then return end -- Keep teams at the end for spectate info
 	GAMEMODE.Teams[intIndex] 		= nil
 	team.GetAllTeams()[intIndex] 	= nil
 end
 
--- local function TeamLeaderChange( um )
--- 	local index = um:ReadShort()
--- 	if GAMEMODE.Teams[index] then
--- 		GAMEMODE.Teams[index].Leader = um:ReadEntity()
--- 	end
--- end
--- usermessage.Hook( "sh_teamleaderchange", TeamLeaderChange )
 function GM.Team:TeamLeaderChange( intIndex, pLeader )
 	if GAMEMODE.Teams[intIndex] then
 		GAMEMODE.Teams[intIndex].Leader = pLeader
