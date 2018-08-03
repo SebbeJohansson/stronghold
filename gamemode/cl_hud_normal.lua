@@ -1,13 +1,3 @@
---[[-------------------------------------------------------
-
-Fight to Survive: Stronghold by RoaringCow, TehBigA is licensed under a Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License.
-
-This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License. 
-To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/3.0/ or send a letter to Creative Commons, 
-444 Castro Street, Suite 900, Mountain View, California, 94041, USA.
-
----------------------------------------------------------]]
-
 --[[ Locals ]]--
 
 local TEX_GRADIENT_TOP 			= surface.GetTextureID( "vgui/gradient-u" )
@@ -59,14 +49,6 @@ local function DrawBar( x, y, w, h, scale, right, color, col_scale )
 	
 	surface.SetDrawColor( color.r*col_scale, color.g*col_scale, color.b*col_scale, 120 )
 	surface.DrawRect( (right and bx+bw_extra or bx), by, bw, bh )
-	
-	--surface.SetDrawColor( 0, 0, 0, 150 )
-	--surface.SetTexture( TEX_GRADIENT_BOTTOM )
-	--surface.DrawTexturedRect( (right and bx+bw_extra or bx), by+bh*0.35, bw, bh*0.65 )
-	
-	--surface.SetDrawColor( 255, 255, 255, 2 )
-	--surface.SetTexture( TEX_GRADIENT_TOP )
-	--surface.DrawTexturedRect( (right and bx+bw_extra or bx), by, bw, bh*0.65 )
 end
 
 -- --------------------------------------------------------------------------------------------------------------
@@ -81,7 +63,6 @@ GM.Huds.Normal = {
 }
 
 function GM.Huds.Normal:Paint( GAMEMODE )
-	--self:DrawTimer( GAMEMODE )
 	self:DrawGBux( GAMEMODE )
 	self:DrawHealthAmmo( GAMEMODE )
 	self:DrawHintBar(GAMEMODE)
@@ -96,7 +77,6 @@ function GM.Huds.Normal:DrawHintBar( GAMEMODE )
 
 	surface.SetDrawColor( 0,0,0,50 )
 	surface.DrawRect( 0, 0, ScrW(), 12 )
-	--draw.RoundedBox( 4, 2, 2, w-4, 16, Color(scale_flash_r*255,scale_flash_r*255,scale_flash_r*255,200+55*scale_flash_r) )
 	
 	-- Ticker
 	surface.SetFont( "gbux_default" ) -- This font looks nice, keep it BUT REMEMBER IF GBUX FILE DOESN'T LOAD THE FONT COULD BE MISSING!!!
@@ -152,7 +132,7 @@ function GM.Huds.Normal:DrawHintBar( GAMEMODE )
 end
 
 function GM.Huds.Normal:DrawGBux()
-	local x, y, w, h	= GAMEMODE.ConVars.GBux_Offset:GetInt(), 12, 150, 30
+	local x, y, w, h	= GAMEMODE.ConVars.GBux_Offset:GetInt(), 12, 200, 40
 	local ply 			= LocalPlayer()
 
 	-- Background
@@ -167,33 +147,28 @@ function GM.Huds.Normal:DrawGBux()
 	surface.DrawLine( x+w-1, y, ScrW(), 12 )
 	
 	surface.SetDrawColor( 200, 200, 200, 120 )
-	--surface.DrawRect( x+1, y, 1, h-2 )
-	--surface.DrawRect( x+1, y+h-2, w-2, 1 )
-	--surface.DrawRect( x+w-2, y, 1, h-2 )
 	
 	surface.SetDrawColor( 0, 0, 0, 120 )
-	--surface.SetTexture( TEX_GRADIENT_TOP )
-	--surface.DrawTexturedRect( x+1, y, w-2, h*0.50 )
 	
 	surface.SetTextColor( 255, 255, 255, 220 )
 	
 	-- Lables
-	surface.SetFont( "gbux_defaultbold" )
+	surface.SetFont( "gbux_defaultbold2" )
 	
-	surface.SetTextPos( x+8, y+1 )
+	surface.SetTextPos( x+8, y+3 )
 	surface.DrawText( "Money:" )
 	
-	surface.SetTextPos( x+8, y+13 )
+	surface.SetTextPos( x+8, y+20 )
 	surface.DrawText( "Multiplier:" )
 	
 	-- Amounts
-	surface.SetFont( "gbux_default" )
+	surface.SetFont( "gbux_default2" )
 	
 	local money = UTIL_PRound( ply:GetMoney(), 2 )
-	surface.SetTextPos( x+74, y+1 )
+	surface.SetTextPos( x+74, y+4 )
 	surface.DrawText( UTIL_FormatMoney(money) )
 	
-	surface.SetTextPos( x+80, y+13 )
+	surface.SetTextPos( x+80, y+20 )
 	surface.DrawText( ply:GetMultiplier() )
 end
 
@@ -232,13 +207,10 @@ function GM.Huds.Normal:DrawHealthAmmo()
 	surface.SetTexture( TEX_GRADIENT_LEFT )
 	
 	surface.SetDrawColor( 0, 0, 0, 100 )
-	--surface.DrawTexturedRect( 0, sh-h, w, h )
 	
 	surface.SetDrawColor( color.r*0.50, color.g*0.50, color.b*0.50, 100 )
-	--surface.DrawTexturedRect( 0, sh-h+1, w, h_actual )
 	
 	surface.SetDrawColor( 200, 200, 200, 200 )
-	--surface.DrawTexturedRect( 0, sh-h+1, w, 1 )
 	
 	-- Left info
 	if !ply.LastHurt or !ply.LastHeal then ply.LastHurt = 0 ply.LastHeal = 0 end
@@ -255,7 +227,6 @@ function GM.Huds.Normal:DrawHealthAmmo()
 	surface.SetTexture( TEX_GRADIENT_BOTTOM )
 	for i = 1, armax do
 		surface.SetDrawColor( 0, 0, 0, 120*(-i/armax+1) )
-		--surface.DrawTexturedRect( x+5+((w-12)/armax)*i, y+38, 1, bar )
 		surface.DrawTexturedRect( x+5+((w-12)/armax)*i, y+bar+12, 1, bar )
 	end
 	
@@ -271,9 +242,7 @@ function GM.Huds.Normal:DrawHealthAmmo()
 		
 		surface.SetTexture( TEX_GRADIENT_LEFT )
 		surface.SetDrawColor( 0, 0, 0, 100*alpha )
-		--surface.DrawTexturedRect( 0, sh-h-15, 150, 15 )
 		surface.SetDrawColor( 200, 200, 200, 200*alpha )
-		--surface.DrawTexturedRect( 0, sh-h-14, 150, 1 )
 		
 		local tw, th = surface.GetTextSize( "Voice Channel: " )
 		surface.SetTextPos( 2, sh-h-6-th*0.50 )
@@ -297,13 +266,10 @@ function GM.Huds.Normal:DrawHealthAmmo()
 		surface.SetTexture( TEX_GRADIENT_RIGHT )
 		
 		surface.SetDrawColor( 0, 0, 0, 100 )
-		--surface.DrawTexturedRect( sw-w, sh-h, w, h )
 		
 		surface.SetDrawColor( color.r*0.50, color.g*0.50, color.b*0.50, 100 )
-		--surface.DrawTexturedRect( sw-w, sh-h+1, w, h_actual )
 		
 		surface.SetDrawColor( 200, 200, 200, 200 )
-		--surface.DrawTexturedRect( sw-w, sh-h+1, w, 1 )
 	end
 	
 	local x, y = sw-w, sh-h
@@ -323,8 +289,8 @@ function GM.Huds.Normal:DrawHealthAmmo()
 		local ammoflash = math.sin( RealTime() * 10 )
 		local ammo 		= (wep:Clip1()/wep.Primary.ClipSize)
 		local ammodelta = (w-12) / wep.Primary.ClipSize
-		local ammocolor = (ammo < 0.25 and ColorBlend( ammoflash, Color(255,0,0,255), Color(150,150,150,100) )) or Color(150,150,150,100)
-		DrawBar( x+7, y+24, w-12, bar, ammo, true, ammocolor, 1 )
+		local ammocolor = (ammo < 0.25 and ColorBlend( ammoflash, Color(255,0,0,255), Color(100,100,100,200) )) or Color(100,100,100,200)
+		DrawBar( x+7, y+9, w-12, bar+15, ammo, true, ammocolor, 1 )
 		
 		if ammodelta > 2 then
 			surface.SetTexture( TEX_GRADIENT_BOTTOM )

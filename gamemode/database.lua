@@ -19,10 +19,10 @@ DB.Bundle.Type = ""
 DB.Bundle.Count = 0
 DB.Bundle.Data = {}
 
-DB.PrintLog = true
+DB.PrintLog = false
 
-DB.PrintQuerys = true
-DB.LogQuerys = true
+DB.PrintQuerys = false
+DB.LogQuerys = false
 
 DB.QueriesPerMinute = 0
 
