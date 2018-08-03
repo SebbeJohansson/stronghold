@@ -19,7 +19,7 @@ SWEP.Spawnable              = true
 SWEP.ViewModel				= "models/weapons/v_c4.mdl"
 SWEP.WorldModel				= "models/weapons/w_c4.mdl"
 SWEP.Primary.ClipSize		= -1
-SWEP.Primary.DefaultClip	= 1
+SWEP.Primary.DefaultClip	= 3
 SWEP.Primary.Automatic		= false
 SWEP.Primary.Ammo			= "grenade"
 SWEP.Secondary.ClipSize		= -1
@@ -104,8 +104,13 @@ function SWEP:Plant()
 		self.Owner:EmitSound( "weapons/c4/c4_plant.wav" )
 		ent:GetTable():WallPlant( tr.HitPos + tr.HitNormal, tr.HitNormal )
 		self:TakePrimaryAmmo( 1 )
+		if !self.Weapon.Clip then self.Weapon.Clip = self.Weapon.Primary.DefaultClip end
+		self.Weapon.Clip = self.Weapon.Clip - 1
 		self.Owner:ConCommand( "lastinv" )
-		self.Weapon:Remove()
+		if self.Weapon.Clip == 0 then
+			self.Weapon.Clip = self.Weapon.Primary.DefaultClip
+			self.Weapon:Remove()
+		end
 	end 
 end
 

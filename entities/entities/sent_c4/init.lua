@@ -2,38 +2,24 @@ AddCSLuaFile( "cl_init.lua" )
 AddCSLuaFile( "shared.lua" )
 include( 'shared.lua' )
 
+local BoomTime = 20
+
 function ENT:Initialize()
 	self.Entity:SetModel("models/weapons/w_c4_planted.mdl") 
 	self.Entity:PhysicsInit(SOLID_VPHYSICS)
 	self.Entity:SetCollisionGroup( COLLISION_GROUP_DEBRIS )
 	self.Entity:SetTrigger( false )
-	self.timer = CurTime() + 5
+	self.timer = CurTime() + BoomTime
 
-	timer.Simple( 1,
-			function()
-			if !IsValid( self ) then return end
-			self:EmitSound( "buttons/button17.wav", self:GetPos(), 110, 110 )
-		end )
-	timer.Simple( 2,
-			function()
-			if !IsValid( self ) then return end
-			self:EmitSound( "buttons/button17.wav", self:GetPos(), 120, 120 )
-		end )
-	timer.Simple( 3,
-			function()
-			if !IsValid( self ) then return end
-			self:EmitSound( "buttons/button17.wav", self:GetPos(), 130, 130 )
-		end )
-	timer.Simple( 4,
-			function()
-			if !IsValid( self ) then return end
-			self:EmitSound( "buttons/button17.wav", self:GetPos(), 140, 140 )
-		end )
-	timer.Simple( 5,
-			function()
-			if !IsValid( self ) then return end
-			self:EmitSound( "buttons/button17.wav", self:GetPos(), 150, 150 )
-		end )
+	local timez = 0
+	for i=1,20 do
+		timez = timez + 10
+		timer.Simple( i,
+				function()
+				if !IsValid( self ) then return end
+				self:EmitSound( "buttons/button17.wav", self:GetPos(), timez, timez )
+			end )
+	end
 end
 
 function ENT:Think()

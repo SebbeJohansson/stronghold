@@ -1,13 +1,3 @@
---[[-------------------------------------------------------
-
-Fight to Survive: Stronghold by RoaringCow, TehBigA is licensed under a Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License.
-
-This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License. 
-To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/3.0/ or send a letter to Creative Commons, 
-444 Castro Street, Suite 900, Mountain View, California, 94041, USA.
-
----------------------------------------------------------]]
-
 --[[
 	GM13 Changes
 	
@@ -37,6 +27,16 @@ local font_data = {
 		size 	= 12,
 		weight 	= 500
 	},
+	["gbux_defaultbold2"] = {
+		font 	= "DermaDefault",
+		size 	= 13,
+		weight 	= 700
+	},
+	["gbux_default2"] = {
+		font 	= "DermaDefault",
+		size 	= 13,
+		weight 	= 500
+	},
 	["DeathCamera"] = {
 		font 	= "calibri",
 		size 	= 30,
@@ -52,6 +52,8 @@ local font_data = {
 surface.CreateFont( "gbux_bigbold", 	font_data.gbux_bigbold )
 surface.CreateFont( "gbux_defaultbold", font_data.gbux_defaultbold )
 surface.CreateFont( "gbux_default", 	font_data.gbux_default )
+surface.CreateFont( "gbux_defaultbold2", font_data.gbux_defaultbold2 )
+surface.CreateFont( "gbux_default2", 	font_data.gbux_default2 )
 surface.CreateFont( "DeathCamera", 		font_data.DeathCamera )
 surface.CreateFont( "Large", 		font_data.Large )
 

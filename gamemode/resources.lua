@@ -1,4 +1,4 @@
-/*resource.AddFile( "sound/advert.wav" )
+resource.AddFile( "sound/advert.wav" )
 resource.AddFile( "sound/doormod_disrupted.wav" )
 resource.AddFile( "sound/doormod_loop.wav" )
 resource.AddFile( "sound/weldspark.wav" )
@@ -136,9 +136,6 @@ resource.AddFile( "resource/fonts/cs1.ttf" )
 
 resource.AddFile( "materials/maps/noicon.vmt" )
 
--- Scoreboard
-resource.AddFile( "materials/vgui/stronghold/scoreboard_header.vmt" )
-
 resource.AddFile( "models/weapons/v_rc_m4a1.mdl" )
 resource.AddFile( "models/weapons/v_rc_p90.mdl" )
 resource.AddFile( "models/weapons/v_rc_g3sg1.mdl" )
@@ -212,9 +209,7 @@ resource.AddFile( "materials/stronghold/cowbody.vmt" )
 resource.AddFile( "materials/stronghold/cowhead.vtf" )
 resource.AddFile( "materials/stronghold/cowhead.vmt" )
 resource.AddFile( "materials/stronghold/cowblink.vtf" )
-resource.AddFile( "materials/stronghold/cowblink.vmt" )*/
-resource.AddWorkshop( "1090312212" )
-
+resource.AddFile( "materials/stronghold/cowblink.vmt" )
 
 
 

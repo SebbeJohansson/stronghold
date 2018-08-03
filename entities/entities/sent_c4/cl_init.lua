@@ -12,7 +12,7 @@ local font_data = {
 surface.CreateFont( "BombText3", font_data.BombText3 )
 
 function ENT:Initialize()
-	self.timer = CurTime()+5.5
+	self.timer = CurTime()+20.5
 end
 
 local function round( x )

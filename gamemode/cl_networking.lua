@@ -6,21 +6,6 @@
 
 GM.Net = {}
 
-
---[[ player_extension.lua ]]--
-
---[[
---local function RecieveStatistics( _, _, _, decoded )
---	if IsValid( decoded.ply ) then 
---		decoded.ply.Statistics = decoded.tbl or {}
---		decoded.ply.StatisticsUpdated = os.date( "%I:%M:%S %p" )
---		if ValidPanel( GAMEMODE.HelpFrame ) and ValidPanel( GAMEMODE.HelpFrame.StatsPanel ) then
---			GAMEMODE.HelpFrame.StatsPanel:PlayerSelected( decoded.ply )
---		end
---	end
---end
---datastream.Hook( "sh_statistics", RecieveStatistics )
-]]
 net.Receive( "sh_statistics", function( intMsgLen )
 	local pPlayer	= net.ReadEntity()
 	local tblStats 	= net.ReadTable()
