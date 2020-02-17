@@ -23,12 +23,12 @@ function PANEL:Init()
 	self.MenuTargetAngle 		= 90
 	self.ToolAngBetween			= 0
 
-	self:AddOption( GAMEMODE.Map.MarkerTypes[1].text, "toolicons/propspawn", 	true, 	function() GAMEMODE.Map:PlaceMarker( 1 ) 			end )
-	self:AddOption( GAMEMODE.Map.MarkerTypes[2].text, "toolicons/propspawn", 	true, 	function() GAMEMODE.Map:PlaceMarker( 1 ) 			end )
-	self:AddOption( GAMEMODE.Map.MarkerTypes[3].text, "toolicons/propspawn", 	true, 	function() GAMEMODE.Map:PlaceMarker( 3 ) 			end )
-	self:AddOption( GAMEMODE.Map.MarkerTypes[4].text, "toolicons/propspawn", 	false, 	function() GAMEMODE.Map:PlaceMarker( 4 ) 			end )
-	self:AddOption( GAMEMODE.Map.MarkerTypes[5].text, "toolicons/propspawn", 	false, 	function() GAMEMODE.Map:PlaceMarker( 5 ) 			end )
-	self:AddOption( "Clear Team Commands.", "toolicons/propspawn", 				true, 	function() GAMEMODE.Net:RequestClearTeamMarkers() 	end )
+	self:AddOption( GAMEMODE.Map.MarkerTypes[1].text, "tool/propspawn", 	true, 	function() GAMEMODE.Map:PlaceMarker( 1 ) 			end )
+	self:AddOption( GAMEMODE.Map.MarkerTypes[2].text, "tool/propspawn", 	true, 	function() GAMEMODE.Map:PlaceMarker( 1 ) 			end )
+	self:AddOption( GAMEMODE.Map.MarkerTypes[3].text, "tool/propspawn", 	true, 	function() GAMEMODE.Map:PlaceMarker( 3 ) 			end )
+	self:AddOption( GAMEMODE.Map.MarkerTypes[4].text, "tool/propspawn", 	false, 	function() GAMEMODE.Map:PlaceMarker( 4 ) 			end )
+	self:AddOption( GAMEMODE.Map.MarkerTypes[5].text, "tool/propspawn", 	false, 	function() GAMEMODE.Map:PlaceMarker( 5 ) 			end )
+	self:AddOption( "Clear Team Commands.", "tool/propspawn", 				true, 	function() GAMEMODE.Net:RequestClearTeamMarkers() 	end )
 	self:InitializeOptions()
 end
 
@@ -97,6 +97,7 @@ function PANEL:Think()
 		self.MenuCurAngle = math.ApproachAngle( self.MenuCurAngle, self.MenuTargetAngle, 15 *(math.AngleDifference(self.MenuCurAngle, self.MenuTargetAngle) /180) )
 	else
 		local cmd = LocalPlayer():GetCurrentCommand()
+		
 		self.MenuCurAngle = self.MenuCurAngle -(radialmode == 2 and cmd:GetMouseX() or cmd:GetMouseY()) *self.TOOL_RADIAL_SPEED:GetFloat()
 		if self.MenuCurAngle < 0 then self.MenuCurAngle = self.MenuCurAngle +360 end
 	end
@@ -184,7 +185,6 @@ end
 
 function PANEL:OpenMenu()
 	if self.MenuOpen then return end
-
 	if self.TOOL_RADIAL_MODE:GetInt() == 1 then
 		gui.EnableScreenClicker( true )
 		gui.SetMousePos( ScrW()/2, ScrH()/2 )

@@ -4,7 +4,6 @@
 	"title"		"F2S: Stronghold"
 	"maps"		"^sh_"
 	"menusystem"	"1"
-	"workshopid"	"1090256786"
 	
 	"settings"
 	{

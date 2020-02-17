@@ -1,6 +1,6 @@
 --[[
 
-	-- Made by: RoaringCow, TehBigA, SpunkPump, Red, and Racer --
+	Made by: RoaringCow, TehBigA, SpunkPump, Red, and Racer
 
 	GM13 Changes
 	
@@ -8,6 +8,7 @@
 	Removed:
 	Updated:
 		net code
+		db code
 	Changed:
 		cleaned Code
 ]]--
