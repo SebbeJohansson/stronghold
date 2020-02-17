@@ -6,11 +6,11 @@ DB.QueryQueue = {}
 DB.NextQuery = CurTime() + 0.1
 DB.FirstConnect = true
 DB.Connected = false
-DB.Host = "192.223.31.138"
-DB.Database = "sh1"
+DB.Host = "localhost"
+DB.Database = "stronghold"
 DB.Port = 3306
-DB.Username = "admin"
-DB.Password = ""
+DB.Username = "luckperms"
+DB.Password = "b3mh8i9XKMQqpL"
 
 DB.Bundle = {}
 DB.Bundle.Bundling = false
@@ -229,6 +229,10 @@ timer.Create("DBCalcQueriesPerMinute",60,0,DB.CalcQueriesPerMinute)
 
 function DB.Setup()
 	DB.Log("[MySQL Msg] Checking / Creating Tables")
+
+	DB.Query{sql=[[
+	CREATE DATABASE IF NOT EXISTS StrongHold;
+	]]}
 
 	DB.Query{sql=[[
 	CREATE TABLE IF NOT EXISTS equip (

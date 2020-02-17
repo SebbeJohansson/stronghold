@@ -112,7 +112,7 @@ function TeamMateHUDPaint()
 			
             local pos = v:LocalToWorld( v:OBBCenter() )
             local sPos = pos:ToScreen()
-            local pDist = (LocalPlayer():GetPos()-savedPos[k]):Length()
+            local pDist = (LocalPlayer():GetPos()-sPos[k]):Length()
             local fade = math.Clamp( pDist-500, 0, 210 )
             
             local vStart = LocalPlayer():EyePos()
