@@ -1,16 +1,23 @@
 require("tmysql4")
 
+include("sv_config.lua")
+
+if Config == nil then
+    Msg("\n\n\nHi there! Looks like the 'sv_config.lua' file is missing!\n")
+    Msg("Please copy 'sv_config.example.lua', add your info, and rename it to 'sv_config.lua' and place it in the 'fortwars/gamemode' folder. K THX.\n\n\n")
+end
+
 DB = {}
 DB.MySql = {}
 DB.QueryQueue = {}
 DB.NextQuery = CurTime() + 0.1
 DB.FirstConnect = true
 DB.Connected = false
-DB.Host = "localhost"
-DB.Database = "stronghold"
-DB.Port = 3306
-DB.Username = "luckperms"
-DB.Password = "b3mh8i9XKMQqpL"
+DB.Host = Config.DB.Host
+DB.Database = Config.DB.Database
+DB.Port = Config.DB.Port
+DB.Username = Config.DB.Username
+DB.Password = Config.DB.Password
 
 DB.Bundle = {}
 DB.Bundle.Bundling = false

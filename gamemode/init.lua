@@ -1,4 +1,7 @@
 --[[
+
+	-- Made by: RoaringCow, TehBigA, SpunkPump, Red, and Racer --
+
 	GM13 Changes
 	
 	Added:

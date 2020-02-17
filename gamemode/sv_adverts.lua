@@ -1,7 +1,6 @@
 GM.Adverts = {}
 
 local PATH_HudAdverts = "gamemodes/stronghold/hud_adverts.txt"
-
 local PATH_ChatAdverts = "gamemodes/stronghold/chat_adverts.txt"
 
 GM.Adverts.KeyReplacements = {}
@@ -204,7 +203,7 @@ GM.Adverts.ChatAdvertsFileDefault = [[{
   "adverts": [
     {
       "color": 4,
-      "text": "If you have suggestions to improve gameplay or need to report a bug, visit forums.roaringcow.com"
+      "text": "If you have suggestions to improve gameplay or need to report a bug, visit our forums"
     },
     {
        "color": 4,

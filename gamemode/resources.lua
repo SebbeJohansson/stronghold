@@ -1,3 +1,14 @@
+
+Msg("Loading workshop items: \n")
+local WorkshopItems = {
+    1090312212
+}
+for k, v in pairs( WorkshopItems ) do
+    Msg("Adding: "..v.."("..k..")\n")
+    resource.AddWorkshop(v)
+end
+
+
 resource.AddFile( "sound/advert.wav" )
 resource.AddFile( "sound/doormod_disrupted.wav" )
 resource.AddFile( "sound/doormod_loop.wav" )
