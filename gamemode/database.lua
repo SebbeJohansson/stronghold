@@ -269,7 +269,7 @@ function DB.Setup()
 	DB.Query{sql=[[
 	CREATE TABLE IF NOT EXISTS `stats` (
 	`steamid` varchar(255) NOT NULL,
-	`money` varchar(255) DEFAULT NULL,
+	`money` varchar(255) DEFAULT 1000,
 	`reloads` varchar(255) DEFAULT NULL,
 	`propsdestroyed` varchar(255) DEFAULT NULL,
 	`bulletshit` varchar(255) DEFAULT NULL,
